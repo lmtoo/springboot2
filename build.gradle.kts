@@ -6,11 +6,25 @@
 
 plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin on the JVM.
-    id("org.jetbrains.kotlin.jvm").version("1.3.21")
-
-    // Apply the application plugin to add support for building a CLI application.
-    application
+    `maven-publish`
+    java
+    idea
+    kotlin("jvm") version "1.3.21"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.3.21"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.3.21"
+    id("org.springframework.boot").version("2.1.3.RELEASE")
 }
+
+apply(plugin = "java")
+apply(plugin = "idea")
+apply(plugin = "kotlin")
+apply(plugin = "maven-publish")
+apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+apply(plugin = "org.jetbrains.kotlin.plugin.noarg")
+apply(plugin = "io.spring.dependency-management")
+
+group = "cn.lmtoo"
+version = "0.0.1-SNAPSHOT"
 
 repositories {
     // Use jcenter for resolving your dependencies.
@@ -18,18 +32,59 @@ repositories {
     jcenter()
 }
 
-dependencies {
-    // Use the Kotlin JDK 8 standard library.
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
-    // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-
-    // Use the Kotlin JUnit integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor(0, "seconds")
+    }
 }
 
-application {
-    // Define the main class for the application.
-    mainClassName = "springboot2.AppKt"
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+
+tasks.register<Jar>("sourcesJar") {
+    group = JavaBasePlugin.BUILD_TASK_NAME
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allJava)
+}
+
+tasks.register<Jar>("javadocJar") {
+    group = JavaBasePlugin.BUILD_TASK_NAME
+    archiveClassifier.set("javadoc")
+    from(tasks.javadoc.get().destinationDir)
+}
+
+tasks.javadoc {
+    group = JavaBasePlugin.BUILD_TASK_NAME
+    options.encoding = "UTF-8"
+}
+
+noArg {
+    annotation("io.swagger.annotations.ApiModel")
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.xml.bind.annotation.XmlRootElement")
+}
+
+
+dependencies {
+
+    implementation("io.springfox:springfox-swagger2:2.9.2")
+    implementation("org.apache.cxf:cxf-spring-boot-starter-jaxws:3.3.1")
+
+    implementation("org.slf4j:slf4j-api")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    runtimeOnly("mysql:mysql-connector-java")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
