@@ -1,6 +1,7 @@
 package springboot2.webservice
 
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
 import javax.jws.WebParam
 import javax.jws.WebMethod
 import javax.xml.ws.RequestWrapper
@@ -18,6 +19,7 @@ interface Hello {
 }
 
 
+@Component
 class HelloPortImpl : Hello {
 
     override fun sayHello(myname: String): String {

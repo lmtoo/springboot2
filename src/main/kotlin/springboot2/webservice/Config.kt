@@ -16,8 +16,8 @@ class Config {
 
 
     @Bean
-    fun endpoint(): Endpoint {
-        val endpoint = EndpointImpl(bus, HelloPortImpl())
+    fun endpoint(helloPortImpl: HelloPortImpl): Endpoint {
+        val endpoint = EndpointImpl(bus, helloPortImpl)
         endpoint.publish("/Hello")
         return endpoint
     }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/")
 class WelcomeController {
 
+
+
     @GetMapping()
     fun welcome():String = "hello welcome"
 }
