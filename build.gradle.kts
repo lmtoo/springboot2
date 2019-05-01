@@ -71,6 +71,8 @@ noArg {
 
 dependencies {
 
+    implementation("org.apache.dubbo:dubbo:2.7.1")
+    implementation("org.apache.dubbo:dubbo-spring-boot-starter:2.7.1")
     implementation("io.springfox:springfox-swagger2:2.9.2")
     implementation("org.apache.cxf:cxf-spring-boot-starter-jaxws:3.3.1")
 

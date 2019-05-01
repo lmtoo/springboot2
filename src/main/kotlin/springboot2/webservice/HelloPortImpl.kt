@@ -1,7 +1,9 @@
 package springboot2.webservice
 
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import springboot2.web.controller.WelcomeController
 import javax.jws.WebParam
 import javax.jws.WebMethod
 import javax.xml.ws.RequestWrapper
@@ -22,7 +24,13 @@ interface Hello {
 @Component
 class HelloPortImpl : Hello {
 
+
+    @Autowired
+    lateinit var welcomeController: WelcomeController
+
     override fun sayHello(myname: String): String {
+
+        println(welcomeController)
         LOG.info("Executing operation sayHello$myname")
         try {
             return "Hello, Welcome to CXF Spring boot $myname!!!"
