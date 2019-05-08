@@ -3,11 +3,50 @@
  */
 package springboot2
 
+import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.kafka.core.KafkaTemplate
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 @SpringBootApplication
-class App
+class App : CommandLineRunner {
+
+    companion object {
+        val logger = LoggerFactory.getLogger(App::class.java)
+    }
+
+    @Autowired
+    lateinit var template: KafkaTemplate<String, String>
+
+    private val latch = CountDownLatch(3)
+
+    override fun run(vararg args: String?) {
+
+        template.send("test-topic", "foo1")
+        template.send("test-topic", "foo2")
+        template.send("test-topic", "foo3")
+        template.send("test-topic", "foo4")
+
+        latch.await(60, TimeUnit.SECONDS)
+
+        logger.info("All received")
+
+
+    }
+
+
+    @KafkaListener(topics = ["test-topic"])
+    fun listen(cr: ConsumerRecord<*, *>) {
+        logger.info(cr.toString())
+        latch.countDown()
+    }
+}
 
 fun main(args: Array<String>) {
     SpringApplication.run(App::class.java, *args)

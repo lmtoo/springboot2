@@ -14,7 +14,6 @@ class Config {
     @Autowired
     private lateinit var bus: Bus
 
-
     @Bean
     fun endpoint(helloPortImpl: HelloPortImpl): Endpoint {
         val endpoint = EndpointImpl(bus, helloPortImpl)

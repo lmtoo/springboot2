@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController
 class WelcomeController {
 
 
+    @GetMapping
+    fun welcome(): String = "hello welcome"
 
-    @GetMapping()
-    fun welcome():String = "hello welcome"
+
 }
